@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My first Vue app</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+        <style>
+            body {
+                margin: 0; /* Default margin of body > 0 */
+                font-family: Helvetica;
+            }
+            .main-box {
+                min-width: 251px;
+                max-width: 600px;
+                background-color: rgb(245, 245, 245);
+                height: 540px;
+                overflow-y: auto;
+            }
+            .header {
+                font-size: 100px;
+                text-align: center;
+                color: rgba(175, 47, 47, 0.15);
+            }
+            .footer {
+                font-size: 10px;
+                color: rgb(191, 191, 191);
+                padding: 5px;
+                text-align: center;
+            }
+            ::placeholder {
+                color: #dddddd;
+                font-style: italic;
+            }
+            .todo-control {
+                width: 100%;
+                background-color: #ffffff;
+                border: 0;
+                box-shadow: 0 13px 18px rgba(75, 75, 75, 0.16);
+            }
+            .input-text {
+                width: 100%;
+                padding: 15px;
+                border: 0;
+                font-size: 24px;
+            }
+            .angle-down-icon-style {
+                padding: 20px 10px 20px 10px;
+                color: #dddddd;
+                min-width: 20px;
+                font-size: 24px;
+            }
+            .content-section {
+                max-width: 560px;
+                margin: auto;
+                margin-bottom: 50px;
+            }
+            .todo-item {
+                width: 100%;
+                padding: 15px;
+                font-size: 24px;
+                border-top: 1px solid #dddddd;
+            }
+            .number-of-items {
+                float: left;
+                padding: 15px;
+                color: rgb(119, 119, 119);
+                font-size: 14px;
+                width: 100px;
+            }
+            .number-of-items:hover {
+                cursor: default;
+            }
+            .clear-completed {
+                float: right;
+                padding: 15px;
+                color: rgb(119, 119, 119);
+                font-size: 14px;
+            }
+            .clear-completed:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+            .display-n-options {
+                margin: auto;
+            }
+            .display-option {
+                border-radius: 10%;
+                display: inline-block;
+                color: rgb(119, 119, 119);
+                font-size: 14px;
+                margin: 5px;
+                padding: 5px;
+            }
+            .display-option:hover {
+                cursor: pointer;
+            }
+            .display-option-selected {
+                border: 1px solid rgba(175, 47, 47, 0.2);
+            }
+            .display-option-deselected {
+                border: 1px solid #ffffff;
+            }
+            .display-option-deselected:hover {
+                border: 1px solid rgba(175, 47, 47, 0.1);
+            }
+            .border-top-bottom {
+                border-top: 1px solid #dddddd;
+                border-bottom: 1px solid #cccccc;
+            }
+            .control-shadow-style {
+                background-color: #f0f0f0;
+                box-shadow: 0 13px 18px rgba(75, 75, 75, 0.16);
+                border-bottom: 1px solid #cccccc;
+                border-right: 1px solid #cccccc;
+                border-left: 1px solid #cccccc;
+                height: 4px;
+            }
+            .first-control-shadow {
+                width: 99%;
+                margin-left: 0.5%;
+            }
+            .second-control-shadow {
+                width: 98%;
+                margin-left: 1%;
+            }
+            .times-icon-style {
+                padding: 0 10px 0 10px;
+                color: rgb(204, 154, 154);
+                font-size: 24px;
+                float: right;
+            }
+            .times-icon-style:hover {
+                color: #af5b5e;
+            }
+            .visible-element {
+                visibility: visible;
+            }
+            .hidden-element {
+                visibility: hidden;
+            }
+            .circle-circumference {
+                width: 23px;
+                height: 23px;
+                border-radius: 50%;
+                border: 1px solid #dddddd;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .circle-circumference-box {
+                width: 20px;
+                padding: 17px 10px 15px 7px;
+                border-top: 1px solid #dddddd;
+            }
+            .check-icon-style {
+                color: #00ff7f;
+            }
+            .strike-text {
+                text-decoration: line-through;
+                color: #dddddd;
+            }
+            .display-flex {
+                display: flex;
+            }
+            .display-none {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main-box">
+            <div class="header">todos</div>
+            <div class="content-section" id="todo-box-id">
+                <div class="todo-control display-flex">
+                    <i class="fas fa-angle-down angle-down-icon-style" @click="onAngleDownIconClick" :class="items.length > 0 ? 'visible-element' : 'hidden-element'"></i>
+                    <input type="text" class="input-text" :placeholder="placeholderValue" @keyup.enter="onInputTextEnter()" v-model.trim="textValue"></input>
+                </div>
+                <div class="todo-control display-flex" v-for="item in filteredItems">
+                    <div class="circle-circumference-box">
+                        <div class="circle-circumference" @click="onCircleCircumferenceClick(item.key)">
+                            <i class="fas fa-check check-icon-style" :class="item.completed ? 'visible-element' : 'hidden-element'"></i>
+                        </div>
+                    </div>
+                    <div class="todo-item" :class="{ 'strike-text': item.completed }" :contenteditable="item.contenteditableValue" :key="item.key" @mouseover="onTodoItemMouseOver(item.key)" @mouseout="onTodoItemMouseOut(item.key)" @dblclick="onTodoItemDblClick(item.key)" @keypress.enter.prevent="onTodoItemEnter(item.key, $event)" @blur="onTodoItemBlur(item.key, $event)">
+                        {{ item.text }}
+			<i class="fas fa-times times-icon-style" :class="item.isVisibleIcon ? 'visible-element' : 'hidden-element'" @click="onTimesIconClick(item.key)"></i>
+                    </div>
+                </div>
+                <div class="todo-control border-top-bottom" :class="items.length > 0 ? 'display-flex' : 'display-none'">
+                    <div class="number-of-items">{{ itemsLeft }}
+                    </div>
+                    <div class="display-n-options">
+                        <div class="display-option" :class="filterCondition === 'All' ? 'display-option-selected' : 'display-option-deselected'" @click="onAllClicked">All</div>
+                        <div class="display-option" :class="filterCondition === 'Active' ? 'display-option-selected' : 'display-option-deselected'" @click="onActiveClicked">Active</div>
+                        <div class="display-option" :class="filterCondition === 'Completed' ? 'display-option-selected' : 'display-option-deselected'" @click="onCompletedClicked">Completed</div>
+                    </div>
+                    <div class="clear-completed" :class="items.filter(item => item.completed).length > 0 ? 'visible-element' : 'hidden-element'" @click="onClearCompletedClick">Clear completed
+                    </div>
+                </div>
+                <div class="first-control-shadow control-shadow-style" :class="items.length > 0 ? 'display-flex' : 'display-none'"></div>
+                <div class="second-control-shadow control-shadow-style" :class="items.length > 0 ? 'display-flex' : 'display-none'"></div>
+            </div>
+            <div class="footer">Double-click to edit a todo</div>
+            <div class="footer">Written by Evan You</div>
+            <div class="footer">Part of TodoMVC</div>
+        </div>
+        <script>
+            new Vue({
+                el: "#todo-box-id",
+                data: {
+                    placeholderValue: "What needs to be done?",
+                    filterCondition: "All",
+                    items: [],
+                    textValue: "",
+                    keyIndex: 0
+                },
+                methods: {
+                    onInputTextEnter() {
+                        if (this.textValue === "") {
+                            return;
+                        }
+                        this.items.push({
+                            key: this.keyIndex,
+                            text: this.textValue,
+                            isVisibleIcon: false,
+                            completed: false,
+                            contenteditableValue: false
+                        });
+                        window.localStorage.setItem("TodoItem" + this.keyIndex, this.textValue);
+                        window.localStorage.setItem("CompletedTodoItem" + this.keyIndex, "false");
+                        this.keyIndex++;
+                        this.textValue = "";
+                    },
+                    onTodoItemMouseOver(key) {
+                        const filteredItems = this.items.filter(item=>item.key === key);
+                        filteredItems[0].isVisibleIcon = true;
+                    },
+                    onTodoItemMouseOut(key) {
+                        const filteredItems = this.items.filter(item=>item.key === key);
+                        filteredItems[0].isVisibleIcon = false;
+                    },
+                    removeTodoItem(key, index) {
+                        this.removeTodoItemFromDatabase(key);
+                        this.items.splice(index, 1);
+                    },
+                    onTimesIconClick(key) {
+                        for (const i in this.items) {
+                            if (this.items[i].key === key) {
+                                this.removeTodoItem(key, i);
+                                return;
+                            }
+                        }
+                    },
+                    onCircleCircumferenceClick(key) {
+                        const filteredItems = this.items.filter(item=>item.key === key);
+                        filteredItems[0].completed = !filteredItems[0].completed;
+                        window.localStorage.setItem("CompletedTodoItem" + filteredItems[0].key, String(filteredItems[0].completed));
+                    },
+                    onAllClicked() {
+                        this.filterCondition = "All";
+                    },
+                    onActiveClicked() {
+                        this.filterCondition = "Active";
+                    },
+                    onCompletedClicked() {
+                        this.filterCondition = "Completed";
+                    },
+                    onClearCompletedClick() {
+                        var i = 0;
+                        while (i < this.items.length) {
+                            if (this.items[i].completed) {
+                                this.removeTodoItem(this.items[i].key, i);
+                            } else {
+                                i++;
+                            }
+                        }
+                    },
+                    onTodoItemDblClick(key) {
+                        const filteredItems = this.items.filter(item=>item.key === key);
+                        filteredItems[0].contenteditableValue = true;
+                    },
+                    removeTodoItemFromDatabase(key) {
+                        window.localStorage.removeItem("TodoItem" + key);
+                        window.localStorage.removeItem("CompletedTodoItem" + key);
+                    },
+                    completeTodoItemEdit(key, text) {
+                        for (const i in this.items) {
+                            if (this.items[i].key === key) {
+                                const trimmedText = text.trim();
+                                if (trimmedText === "") {
+                                    this.removeTodoItem(key, i);
+                                } else {
+                                    // Original TodoMVC displays in the UI one single white space
+                                    // between words, and when double clicking the todo item,
+                                    // in the edit mode, multiple white spaces are between words.  
+                                    // Not completely implementing the same edit feature, and just 
+                                    // store text.trim() to the edited todo item.
+                                    this.items[i].text = trimmedText;
+                                    this.items[i].contenteditableValue = false;
+                                    window.localStorage.setItem("TodoItem" + key, text);
+                                }
+                                return;
+                            }
+                        }
+                    },
+                    onTodoItemEnter(key, event) {
+                        this.completeTodoItemEdit(key, event.target.innerText);
+                    },
+                    onTodoItemBlur(key, event) {
+                        this.completeTodoItemEdit(key, event.target.innerText);
+                    },
+                    onAngleDownIconClick() {
+                        const allCompleted = (this.items.filter(item=>item.completed).length === this.items.length);
+                        for (const item of this.items) {
+                            window.localStorage.setItem("CompletedTodoItem" + item.key, String(!allCompleted));
+                            item.completed = !allCompleted;
+                        }
+                    }
+                },
+                computed: {
+                    filteredItems() {
+                        if (this.filterCondition === "All") {
+                            return this.items;
+                        } else if (this.filterCondition === "Active") {
+                            return this.items.filter(item=>!item.completed);
+                        } else {
+                            return this.items.filter(item=>item.completed);
+                        }
+                    },
+                    itemsLeft() {
+                        const filteredItems = this.items.filter(item=>!item.completed);
+                        return filteredItems.length === 1 ? "1 item left" : filteredItems.length + " items left";
+                    }
+                },
+                created() {
+                    for (const k in window.localStorage) {
+                        if (k.startsWith("TodoItem")) {
+                            const key = Number(k.substr(8)); // Length of "TodoItem" === 8
+                            this.items.push({
+                                key: key,
+                                text: window.localStorage.getItem("TodoItem" + key),
+                                isVisibleIcon: false,
+                                completed: window.localStorage.getItem("CompletedTodoItem" + key) === "true",
+                                contenteditableValue: false
+                            });
+                            this.keyIndex = Math.max(key, this.keyIndex);
+                        }
+                    }
+                    this.keyIndex++;
+                    this.items.sort((a,b)=>a.key - b.key);
+                }
+            });
+        </script>
+    </body>
+</html>
