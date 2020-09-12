@@ -169,67 +169,71 @@
     </head>
     <body>
         <div class="main-box">
-            <div class="header">todos</div>
-            <div class="content-section" id="todo-box-id">
-                <div class="todo-control display-flex">
-                    <i class="fas fa-angle-down angle-down-icon-style" @click="onAngleDownIconClick" :class="items.length > 0 ? 'visible-element' : 'hidden-element'"></i>
-                    <input type="text" class="input-text" :placeholder="placeholderValue" @keyup.enter="onInputTextEnter()" v-model.trim="textValue"></input>
-                </div>
-                <div class="todo-control display-flex" v-for="item in filteredItems">
-                    <div class="circle-circumference-box">
-                        <div class="circle-circumference" @click="onCircleCircumferenceClick(item.key)">
-                            <i class="fas fa-check check-icon-style" :class="item.completed ? 'visible-element' : 'hidden-element'"></i>
-                        </div>
-                    </div>
-                    <div class="todo-item" :class="{ 'strike-text': item.completed }" :contenteditable="item.contenteditableValue" :key="item.key" @mouseover="onTodoItemMouseOver(item.key)" @mouseout="onTodoItemMouseOut(item.key)" @dblclick="onTodoItemDblClick(item.key)" @keypress.enter.prevent="onTodoItemEnter(item.key, $event)" @blur="onTodoItemBlur(item.key, $event)">
-                        {{ item.text }}
-			<i class="fas fa-times times-icon-style" :class="item.isVisibleIcon ? 'visible-element' : 'hidden-element'" @click="onTimesIconClick(item.key)"></i>
-                    </div>
-                </div>
-                <div class="todo-control border-top-bottom" :class="items.length > 0 ? 'display-flex' : 'display-none'">
-                    <div class="number-of-items">{{ itemsLeft }}
-                    </div>
-                    <div class="display-n-options">
-                        <div class="display-option" :class="filterCondition === 'All' ? 'display-option-selected' : 'display-option-deselected'" @click="onAllClicked">All</div>
-                        <div class="display-option" :class="filterCondition === 'Active' ? 'display-option-selected' : 'display-option-deselected'" @click="onActiveClicked">Active</div>
-                        <div class="display-option" :class="filterCondition === 'Completed' ? 'display-option-selected' : 'display-option-deselected'" @click="onCompletedClicked">Completed</div>
-                    </div>
-                    <div class="clear-completed" :class="items.filter(item => item.completed).length > 0 ? 'visible-element' : 'hidden-element'" @click="onClearCompletedClick">Clear completed
-                    </div>
-                </div>
-                <div class="first-control-shadow control-shadow-style" :class="items.length > 0 ? 'display-flex' : 'display-none'"></div>
-                <div class="second-control-shadow control-shadow-style" :class="items.length > 0 ? 'display-flex' : 'display-none'"></div>
+          <div class="header">todos</div>
+          <div class="content-section" id="todo-box-id">
+            <div class="todo-control display-flex">
+              <i class="fas fa-angle-down angle-down-icon-style" @click="onAngleDownIconClick" :class="items.length > 0 ? 'visible-element' : 'hidden-element'"></i>
+              <input type="text" class="input-text" :placeholder="placeholderValue" @keyup.enter="onInputTextEnter()" v-model.trim="textValue"></input>
             </div>
-            <div class="footer">Double-click to edit a todo</div>
-            <div class="footer">Written by Evan You</div>
-            <div class="footer">Part of TodoMVC</div>
+            <div class="todo-control display-flex" v-for="item in filteredItems">
+              <div class="circle-circumference-box">
+                <div class="circle-circumference" @click="onCircleCircumferenceClick(item.key)">
+                  <i class="fas fa-check check-icon-style" :class="item.completed ? 'visible-element' : 'hidden-element'"></i>
+                </div>
+              </div>
+              <div class="todo-item" :class="{ 'strike-text': item.completed }" :contenteditable="item.contenteditableValue" :key="item.key" @mouseover="onTodoItemMouseOver(item.key)" @mouseout="onTodoItemMouseOut(item.key)" @dblclick="onTodoItemDblClick(item.key)" @keypress.enter.prevent="onTodoItemEnter(item.key, $event)" @blur="onTodoItemBlur(item.key, $event)">
+                {{ item.text }}
+                <i class="fas fa-times times-icon-style" :class="item.isVisibleIcon ? 'visible-element' : 'hidden-element'" @click="onTimesIconClick(item.key)"></i>
+              </div>
+            </div>
+            <div class="todo-control border-top-bottom" :class="items.length > 0 ? 'display-flex' : 'display-none'">
+              <div class="number-of-items">{{ itemsLeft }}
+              </div>
+              <div class="display-n-options">
+                <div class="display-option" :class="filterCondition === 'All' ? 'display-option-selected' : 'display-option-deselected'" @click="onAllClicked">All</div>
+                <div class="display-option" :class="filterCondition === 'Active' ? 'display-option-selected' : 'display-option-deselected'" @click="onActiveClicked">Active</div>
+                <div class="display-option" :class="filterCondition === 'Completed' ? 'display-option-selected' : 'display-option-deselected'" @click="onCompletedClicked">Completed</div>
+              </div>
+              <div class="clear-completed" :class="items.filter(item => item.completed).length > 0 ? 'visible-element' : 'hidden-element'" @click="onClearCompletedClick">Clear completed
+              </div>
+            </div>
+            <div class="first-control-shadow control-shadow-style" :class="items.length > 0 ? 'display-flex' : 'display-none'"></div>
+            <div class="second-control-shadow control-shadow-style" :class="items.length > 0 ? 'display-flex' : 'display-none'"></div>
+          </div>
+          <div class="footer">
+            <p>Double-click to edit a todo</p>
+            <p>Written by Evan You</p>
+            <p>Part of TodoMVC</p>
+          </div>
         </div>
         <script>
-            new Vue({
+              // Borrow code from https://codesandbox.io/s/github/vuejs/vuejs.org/tree/master/src/v2/examples/vue-20-todomvc?from-embed
+              // for using JSON.stringify to store the list of todos for each todo item update
+              const STORAGE_KEY = "todos-vuejs-2.0";
+              
+              new Vue({
                 el: "#todo-box-id",
                 data: {
                     placeholderValue: "What needs to be done?",
                     filterCondition: "All",
                     items: [],
-                    textValue: "",
-                    keyIndex: 0
+                    textValue: ""
                 },
                 methods: {
                     onInputTextEnter() {
                         if (this.textValue === "") {
                             return;
                         }
+                        const lastKey = (this.items.length === 0) ? 0 : this.items[this.items.length - 1].key;
                         this.items.push({
-                            key: this.keyIndex,
+                            key: lastKey + 1,
                             text: this.textValue,
                             isVisibleIcon: false,
                             completed: false,
                             contenteditableValue: false
-                        });
-                        window.localStorage.setItem("TodoItem" + this.keyIndex, this.textValue);
-                        window.localStorage.setItem("CompletedTodoItem" + this.keyIndex, "false");
-                        this.keyIndex++;
+                        });                        
                         this.textValue = "";
+                        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items, ["key", "text", "completed"]));
                     },
                     onTodoItemMouseOver(key) {
                         const filteredItems = this.items.filter(item=>item.key === key);
@@ -239,14 +243,11 @@
                         const filteredItems = this.items.filter(item=>item.key === key);
                         filteredItems[0].isVisibleIcon = false;
                     },
-                    removeTodoItem(key, index) {
-                        this.removeTodoItemFromDatabase(key);
-                        this.items.splice(index, 1);
-                    },
                     onTimesIconClick(key) {
                         for (const i in this.items) {
                             if (this.items[i].key === key) {
-                                this.removeTodoItem(key, i);
+                                this.items.splice(i, 1);
+                                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items, ["key", "text", "completed"]));
                                 return;
                             }
                         }
@@ -254,7 +255,7 @@
                     onCircleCircumferenceClick(key) {
                         const filteredItems = this.items.filter(item=>item.key === key);
                         filteredItems[0].completed = !filteredItems[0].completed;
-                        window.localStorage.setItem("CompletedTodoItem" + filteredItems[0].key, String(filteredItems[0].completed));
+                        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items, ["key", "text", "completed"]));
                     },
                     onAllClicked() {
                         this.filterCondition = "All";
@@ -266,29 +267,19 @@
                         this.filterCondition = "Completed";
                     },
                     onClearCompletedClick() {
-                        var i = 0;
-                        while (i < this.items.length) {
-                            if (this.items[i].completed) {
-                                this.removeTodoItem(this.items[i].key, i);
-                            } else {
-                                i++;
-                            }
-                        }
+                        this.items = this.items.filter(item=>item.completed === false);                        
+                        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items, ["key", "text", "completed"]));
                     },
                     onTodoItemDblClick(key) {
                         const filteredItems = this.items.filter(item=>item.key === key);
                         filteredItems[0].contenteditableValue = true;
-                    },
-                    removeTodoItemFromDatabase(key) {
-                        window.localStorage.removeItem("TodoItem" + key);
-                        window.localStorage.removeItem("CompletedTodoItem" + key);
                     },
                     completeTodoItemEdit(key, text) {
                         for (const i in this.items) {
                             if (this.items[i].key === key) {
                                 const trimmedText = text.trim();
                                 if (trimmedText === "") {
-                                    this.removeTodoItem(key, i);
+                                    this.items.splice(i, 1);
                                 } else {
                                     // Original TodoMVC displays in the UI one single white space
                                     // between words, and when double clicking the todo item,
@@ -297,8 +288,8 @@
                                     // store text.trim() to the edited todo item.
                                     this.items[i].text = trimmedText;
                                     this.items[i].contenteditableValue = false;
-                                    window.localStorage.setItem("TodoItem" + key, text);
                                 }
+                                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items, ["key", "text", "completed"]));
                                 return;
                             }
                         }
@@ -311,10 +302,8 @@
                     },
                     onAngleDownIconClick() {
                         const allCompleted = (this.items.filter(item=>item.completed).length === this.items.length);
-                        for (const item of this.items) {
-                            window.localStorage.setItem("CompletedTodoItem" + item.key, String(!allCompleted));
-                            item.completed = !allCompleted;
-                        }
+                        this.items.forEach(element => element.completed = !allCompleted);
+                        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items, ["key", "text", "completed"]));
                     }
                 },
                 computed: {
@@ -333,21 +322,12 @@
                     }
                 },
                 created() {
-                    for (const k in window.localStorage) {
-                        if (k.startsWith("TodoItem")) {
-                            const key = Number(k.substr(8)); // Length of "TodoItem" === 8
-                            this.items.push({
-                                key: key,
-                                text: window.localStorage.getItem("TodoItem" + key),
-                                isVisibleIcon: false,
-                                completed: window.localStorage.getItem("CompletedTodoItem" + key) === "true",
-                                contenteditableValue: false
-                            });
-                            this.keyIndex = Math.max(key, this.keyIndex);
-                        }
-                    }
-                    this.keyIndex++;
-                    this.items.sort((a,b)=>a.key - b.key);
+                    const helperItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+                    for (const item of helperItems) {
+                        item.isVisibleIcon = false;
+                        item.contenteditableValue = false;
+                    }           
+                    this.items = helperItems;
                 }
             });
         </script>
