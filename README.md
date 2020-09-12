@@ -6,4 +6,4 @@ Vue.js のサンプルアプリの TODO リストを実装しようとした。 
 
 なるべく Vue.js のサンプルアプリの TODOリスト と同じの TODOリストを実装した。 Vue.js のサンプルアプリと同じの UI スタイル、UI 動作を実装した。 Vue.js のサンプルアプリと同じで、ブラウザリフレッシュ後、TODO 項目の順番が保つように実装した。
 
-デモ：https://jsfiddle.net/eh8yvf3x/1/
+デモ：https://jsfiddle.net/onzk07be/26/
