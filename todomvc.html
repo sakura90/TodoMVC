@@ -207,8 +207,8 @@
           </div>
         </div>
         <script>
-              // Borrow code from https://codesandbox.io/s/github/vuejs/vuejs.org/tree/master/src/v2/examples/vue-20-todomvc?from-embed
-              // for using JSON.stringify to store the list of todos for each todo item update
+              // Todoの項目をJSON.stringifyで格納する方法はオリジナルのアプリの方法。
+              // https://codesandbox.io/s/github/vuejs/vuejs.org/tree/master/src/v2/examples/vue-20-todomvc?from-embed
               const STORAGE_KEY = "todos-vuejs-2.0";
               
               new Vue({
@@ -281,11 +281,8 @@
                                 if (trimmedText === "") {
                                     this.items.splice(i, 1);
                                 } else {
-                                    // Original TodoMVC displays in the UI one single white space
-                                    // between words, and when double clicking the todo item,
-                                    // in the edit mode, multiple white spaces are between words.  
-                                    // Not completely implementing the same edit feature, and just 
-                                    // store text.trim() to the edited todo item.
+                                    // オリジナルのTodoMVCアプリはマルチスペースを一個のスペースとして表示する。
+                                    // このTodoMVCアプリはマルチスペースをマルチスペースのそのままに表示する。
                                     this.items[i].text = trimmedText;
                                     this.items[i].contenteditableValue = false;
                                 }
